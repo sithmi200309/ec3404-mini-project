@@ -1,30 +1,54 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import { ref, onMounted } from 'vue'
+import type { Product, ProductResponse } from './types/product'
+
+const products = ref<Product[]>([])
+const loading = ref<boolean>(true)
+
+const fetchProducts = async () => {
+  try {
+    const response = await fetch('https://dummyjson.com/products')
+    const data: ProductResponse = await response.json()
+    products.value = data.products
+  } catch (error) {
+    console.error('Error fetching products:', error)
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  fetchProducts()
+})
 </script>
 
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
-</template>
+  <div class="min-h-screen bg-gray-100 p-8">
+    <h1 class="text-3xl font-bold text-center mb-8">
+      EC3404 Mini Project - Product Store
+    </h1>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
+    <div v-if="loading" class="text-center text-lg">
+      Loading products...
+    </div>
+
+    <div
+      v-else
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+    >
+      <div
+        v-for="product in products"
+        :key="product.id"
+        class="bg-white rounded-xl shadow-md p-4"
+      >
+        <img
+          :src="product.thumbnail"
+          alt=""
+          class="h-40 w-full object-cover rounded-lg"
+        />
+        <h2 class="font-semibold mt-2">{{ product.title }}</h2>
+        <p class="text-sm text-gray-600">${{ product.price }}</p>
+      </div>
+    </div>
+  </div>
+</template>
