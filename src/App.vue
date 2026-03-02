@@ -9,9 +9,18 @@ const products = ref<Product[]>([])
 const loading = ref<boolean>(true)
 const searchQuery = ref<string>('')
 
+/* Dark Mode */
+const darkMode = ref<boolean>(false)
+
+const toggleDarkMode = () => {
+  darkMode.value = !darkMode.value
+}
+
+/* Modal */
 const selectedProduct = ref<Product | null>(null)
 const showModal = ref<boolean>(false)
 
+/* Fetch Products */
 const fetchProducts = async () => {
   try {
     const response = await fetch('https://dummyjson.com/products')
@@ -24,6 +33,7 @@ const fetchProducts = async () => {
   }
 }
 
+/* Search Filter */
 const filteredProducts = computed(() => {
   return products.value.filter((product) =>
     product.title
@@ -32,11 +42,13 @@ const filteredProducts = computed(() => {
   )
 })
 
+/* Open Modal */
 const openProduct = (product: Product) => {
   selectedProduct.value = product
   showModal.value = true
 }
 
+/* Close Modal */
 const closeModal = () => {
   showModal.value = false
 }
@@ -47,11 +59,27 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-100 p-8">
-
-    <h1 class="text-3xl font-bold text-center mb-8">
-      EC3404 Mini Project - Product Store
+  <div
+    :class="
+      darkMode
+        ? 'min-h-screen p-8 bg-gray-900 text-white'
+        : 'min-h-screen p-8 bg-gradient-to-br from-gray-100 to-gray-200'
+    "
+  >
+    <!-- Title -->
+    <h1 class="text-4xl font-bold text-center mb-6">
+      Smart Product Explorer
     </h1>
+
+    <!-- Dark Mode Button -->
+    <div class="flex justify-center mb-6">
+      <button
+        @click="toggleDarkMode"
+        class="px-4 py-2 bg-black text-white rounded-lg"
+      >
+        Toggle Dark Mode
+      </button>
+    </div>
 
     <!-- Search -->
     <div class="mb-6 flex justify-center">
@@ -59,7 +87,7 @@ onMounted(() => {
         v-model="searchQuery"
         type="text"
         placeholder="Search products..."
-        class="w-full max-w-md p-2 border rounded-lg shadow-sm"
+        class="w-full max-w-md p-2 border rounded-lg shadow-sm text-black"
       />
     </div>
 
@@ -87,6 +115,5 @@ onMounted(() => {
       :show="showModal"
       @close="closeModal"
     />
-
   </div>
 </template>

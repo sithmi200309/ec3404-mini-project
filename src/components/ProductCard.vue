@@ -11,14 +11,26 @@ const emit = defineEmits(['select'])
 <template>
   <div
     @click="emit('select', product)"
-    class="bg-white rounded-xl shadow-md p-4 hover:shadow-xl transition cursor-pointer"
+    class="bg-white rounded-xl shadow-md p-4 cursor-pointer
+           hover:shadow-2xl hover:scale-105
+           transition duration-300"
   >
     <img
       :src="product.thumbnail"
       alt=""
-      class="h-40 w-full object-cover rounded-lg"
+      class="h-44 w-full object-cover rounded-lg"
     />
-    <h2 class="font-semibold mt-2">{{ product.title }}</h2>
-    <p class="text-sm text-gray-600">${{ product.price }}</p>
+
+    <h2 class="font-semibold mt-3 text-lg">
+      {{ product.title }}
+    </h2>
+
+    <p class="text-gray-600 mt-1">
+      ${{ product.price }}
+    </p>
+
+    <p class="text-sm text-gray-400 capitalize">
+      {{ product.category }}
+    </p>
   </div>
 </template>
