@@ -4,6 +4,10 @@ import type { Product, ProductResponse } from './types/product'
 
 import ProductCard from './components/ProductCard.vue'
 import ProductDetailModal from './components/ProductDetailModal.vue'
+import { useCart } from './composables/useCart'
+
+/* CART */
+const { cart } = useCart()
 
 /* STATES */
 const products = ref<Product[]>([])
@@ -23,7 +27,7 @@ const toggleDarkMode = () => {
 const selectedProduct = ref<Product | null>(null)
 const showModal = ref(false)
 
-/* FETCH API */
+/* FETCH PRODUCTS */
 const fetchProducts = async () => {
   try {
     const response = await fetch('https://dummyjson.com/products')
@@ -71,7 +75,6 @@ const closeModal = () => {
   showModal.value = false
 }
 
-/* LOAD DATA */
 onMounted(fetchProducts)
 </script>
 
@@ -83,10 +86,19 @@ onMounted(fetchProducts)
         : 'min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 p-8'
     "
   >
-    <!-- TITLE -->
-    <h1 class="text-4xl font-bold text-center mb-6">
-      Smart Product Explorer
-    </h1>
+
+    <!-- HEADER -->
+    <div class="flex justify-between items-center mb-6">
+
+      <h1 class="text-4xl font-bold">
+        Smart Product Explorer
+      </h1>
+
+      <div class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow">
+        🛒 Cart: {{ cart.length }}
+      </div>
+
+    </div>
 
     <!-- DARK MODE -->
     <div class="flex justify-center mb-6">
@@ -94,7 +106,7 @@ onMounted(fetchProducts)
         @click="toggleDarkMode"
         class="px-4 py-2 bg-black text-white rounded-lg"
       >
-        Dark Mode
+        Toggle Dark Mode
       </button>
     </div>
 
@@ -148,5 +160,6 @@ onMounted(fetchProducts)
       :show="showModal"
       @close="closeModal"
     />
+
   </div>
 </template>
