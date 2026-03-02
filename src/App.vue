@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import type { Product, ProductResponse } from './types/product'
-
+import ProductCard from './components/ProductCard.vue'
 const products = ref<Product[]>([])
 const loading = ref<boolean>(true)
 
@@ -36,19 +36,11 @@ onMounted(() => {
       v-else
       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
     >
-      <div
-        v-for="product in products"
-        :key="product.id"
-        class="bg-white rounded-xl shadow-md p-4"
-      >
-        <img
-          :src="product.thumbnail"
-          alt=""
-          class="h-40 w-full object-cover rounded-lg"
-        />
-        <h2 class="font-semibold mt-2">{{ product.title }}</h2>
-        <p class="text-sm text-gray-600">${{ product.price }}</p>
-      </div>
+      <ProductCard
+  v-for="product in products"
+  :key="product.id"
+  :product="product"
+/>
     </div>
   </div>
 </template>
