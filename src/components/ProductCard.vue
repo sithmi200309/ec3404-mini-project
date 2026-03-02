@@ -4,10 +4,15 @@ import type { Product } from '../types/product'
 defineProps<{
   product: Product
 }>()
+
+const emit = defineEmits(['select'])
 </script>
 
 <template>
-  <div class="bg-white rounded-xl shadow-md p-4 hover:shadow-xl transition">
+  <div
+    @click="emit('select', product)"
+    class="bg-white rounded-xl shadow-md p-4 hover:shadow-xl transition cursor-pointer"
+  >
     <img
       :src="product.thumbnail"
       alt=""
