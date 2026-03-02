@@ -5,22 +5,25 @@ import type { Product, ProductResponse } from './types/product'
 import ProductCard from './components/ProductCard.vue'
 import ProductDetailModal from './components/ProductDetailModal.vue'
 
+/* STATES */
 const products = ref<Product[]>([])
-const loading = ref<boolean>(true)
-const searchQuery = ref<string>('')
+const loading = ref(true)
 
-/* Dark Mode */
-const darkMode = ref<boolean>(false)
+const searchQuery = ref('')
+const selectedCategory = ref('all')
+
+/* DARK MODE */
+const darkMode = ref(false)
 
 const toggleDarkMode = () => {
   darkMode.value = !darkMode.value
 }
 
-/* Modal */
+/* MODAL */
 const selectedProduct = ref<Product | null>(null)
-const showModal = ref<boolean>(false)
+const showModal = ref(false)
 
-/* Fetch Products */
+/* FETCH API */
 const fetchProducts = async () => {
   try {
     const response = await fetch('https://dummyjson.com/products')
@@ -33,70 +36,100 @@ const fetchProducts = async () => {
   }
 }
 
-/* Search Filter */
-const filteredProducts = computed(() => {
-  return products.value.filter((product) =>
-    product.title
-      .toLowerCase()
-      .includes(searchQuery.value.toLowerCase())
+/* CATEGORY LIST */
+const categories = computed(() => {
+  const unique = new Set(
+    products.value.map((p) => p.category)
   )
+  return ['all', ...unique]
 })
 
-/* Open Modal */
+/* FILTER PRODUCTS */
+const filteredProducts = computed(() => {
+  return products.value.filter((product) => {
+
+    const searchMatch =
+      product.title
+        .toLowerCase()
+        .includes(searchQuery.value.toLowerCase())
+
+    const categoryMatch =
+      selectedCategory.value === 'all' ||
+      product.category === selectedCategory.value
+
+    return searchMatch && categoryMatch
+  })
+})
+
+/* MODAL FUNCTIONS */
 const openProduct = (product: Product) => {
   selectedProduct.value = product
   showModal.value = true
 }
 
-/* Close Modal */
 const closeModal = () => {
   showModal.value = false
 }
 
-onMounted(() => {
-  fetchProducts()
-})
+/* LOAD DATA */
+onMounted(fetchProducts)
 </script>
 
 <template>
   <div
     :class="
       darkMode
-        ? 'min-h-screen p-8 bg-gray-900 text-white'
-        : 'min-h-screen p-8 bg-gradient-to-br from-gray-100 to-gray-200'
+        ? 'min-h-screen bg-gray-900 text-white p-8'
+        : 'min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 p-8'
     "
   >
-    <!-- Title -->
+    <!-- TITLE -->
     <h1 class="text-4xl font-bold text-center mb-6">
       Smart Product Explorer
     </h1>
 
-    <!-- Dark Mode Button -->
+    <!-- DARK MODE -->
     <div class="flex justify-center mb-6">
       <button
         @click="toggleDarkMode"
         class="px-4 py-2 bg-black text-white rounded-lg"
       >
-        Toggle Dark Mode
+        Dark Mode
       </button>
     </div>
 
-    <!-- Search -->
-    <div class="mb-6 flex justify-center">
+    <!-- SEARCH -->
+    <div class="flex justify-center mb-6">
       <input
         v-model="searchQuery"
-        type="text"
         placeholder="Search products..."
-        class="w-full max-w-md p-2 border rounded-lg shadow-sm text-black"
+        class="w-full max-w-md p-2 border rounded-lg text-black"
       />
     </div>
 
-    <!-- Loading -->
-    <div v-if="loading" class="text-center text-lg">
+    <!-- CATEGORY FILTER -->
+    <div class="flex flex-wrap justify-center gap-2 mb-8">
+      <button
+        v-for="category in categories"
+        :key="category"
+        @click="selectedCategory = category"
+        class="px-3 py-1 rounded border"
+        :class="
+          selectedCategory === category
+            ? 'bg-blue-600 text-white'
+            : 'bg-white text-black'
+        "
+      >
+        {{ category }}
+      </button>
+    </div>
+
+    <!-- LOADING -->
+    <div v-if="loading" class="text-center">
       Loading products...
     </div>
 
-    <!-- Products -->
+    <!-- PRODUCTS -->
     <div
       v-else
       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
@@ -109,7 +142,7 @@ onMounted(() => {
       />
     </div>
 
-    <!-- Modal -->
+    <!-- MODAL -->
     <ProductDetailModal
       :product="selectedProduct"
       :show="showModal"
