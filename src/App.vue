@@ -88,17 +88,21 @@ onMounted(fetchProducts)
   >
 
     <!-- HEADER -->
-    <div class="flex justify-between items-center mb-6">
+    <div class="relative flex items-center mb-6">
 
-      <h1 class="text-4xl font-bold">
-        Smart Product Explorer
-      </h1>
+  <!-- CENTER TITLE -->
+  <h1 class="text-4xl font-bold mx-auto">
+    Smart Product Explorer
+  </h1>
 
-      <div class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow">
-        🛒 Cart: {{ cart.length }}
-      </div>
+  <!-- CART RIGHT -->
+  <div
+    class="absolute right-0 bg-blue-600 text-white px-4 py-2 rounded-lg shadow"
+  >
+    🛒 Cart: {{ cart.length }}
+  </div>
 
-    </div>
+</div>
 
     <!-- DARK MODE -->
     <div class="flex justify-center mb-6">
@@ -106,7 +110,7 @@ onMounted(fetchProducts)
         @click="toggleDarkMode"
         class="px-4 py-2 bg-black text-white rounded-lg"
       >
-        Toggle Dark Mode
+        Dark Mode
       </button>
     </div>
 

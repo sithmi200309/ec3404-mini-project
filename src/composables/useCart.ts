@@ -1,10 +1,14 @@
 import { ref, watch } from 'vue'
 import type { Product } from '../types/product'
 
-const cart = ref<Product[]>(JSON.parse(
-  localStorage.getItem('cart') || '[]'
-))
+/* Load cart from sessionStorage */
+const savedCart = sessionStorage.getItem('cart')
 
+const cart = ref<Product[]>(
+  savedCart ? JSON.parse(savedCart) : []
+)
+
+/* Add item */
 const addToCart = (product: Product) => {
   const exists = cart.value.find(
     (item) => item.id === product.id
@@ -15,6 +19,7 @@ const addToCart = (product: Product) => {
   }
 }
 
+/* Remove item */
 const removeFromCart = (id: number) => {
   cart.value = cart.value.filter(
     (item) => item.id !== id
@@ -24,10 +29,10 @@ const removeFromCart = (id: number) => {
 /* Save automatically */
 watch(
   cart,
-  () => {
-    localStorage.setItem(
+  (newCart) => {
+    sessionStorage.setItem(
       'cart',
-      JSON.stringify(cart.value)
+      JSON.stringify(newCart)
     )
   },
   { deep: true }
