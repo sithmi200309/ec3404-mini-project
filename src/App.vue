@@ -136,7 +136,7 @@ onMounted(fetchProducts)
             : 'bg-white text-black'
         "
       >
-        {{ category }}
+        {{ category.charAt(0).toUpperCase() + category.slice(1) }}
       </button>
     </div>
 
