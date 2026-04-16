@@ -8,7 +8,18 @@ import { useCart } from './composables/useCart'
 
 /* CART */
 const { cart } = useCart()
+const removeFromCart = (index: number) => {
+  cart.value.splice(index, 1)
+}
+const showCart = ref(false)
 
+const openCart = () => {
+  showCart.value = true
+}
+
+const closeCart = () => {
+  showCart.value = false
+}
 /* STATES */
 const products = ref<Product[]>([])
 const loading = ref(true)
@@ -96,11 +107,64 @@ onMounted(fetchProducts)
   </h1>
 
   <!-- CART RIGHT -->
+  <div class="absolute right-0">
+
+  <!-- CART COUNT -->
   <div
-    class="absolute right-0 bg-blue-600 text-white px-4 py-2 rounded-lg shadow"
-  >
-    🛒 Cart: {{ cart.length }}
+  @click="openCart"
+  class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow mb-2 cursor-pointer"
+>
+  🛒 Cart: {{ cart.length }}
+</div>
+
+  <!-- CART ITEMS -->
+  <!-- CART MODAL -->
+<div
+  v-if="showCart"
+  @click.self="closeCart"
+  class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center"
+>
+  <div class="bg-white p-6 rounded-xl w-[400px] relative text-black">
+
+    <!-- CLOSE -->
+    <button
+      class="absolute top-2 right-3 text-xl"
+      @click="closeCart"
+    >
+      ✖
+    </button>
+
+    <h2 class="text-xl font-bold mb-4">
+      Your Cart
+    </h2>
+
+    <!-- ITEMS -->
+    <div v-if="cart.length > 0">
+      <div
+        v-for="(item, index) in cart"
+        :key="index"
+        class="flex justify-between items-center mb-3"
+      >
+        <span>{{ item.title }}</span>
+
+        <button
+          @click="removeFromCart(index)"
+          class="text-red-500 text-sm"
+        >
+          Remove
+        </button>
+      </div>
+    </div>
+
+    <!-- EMPTY -->
+    <div v-else class="text-gray-500 text-center">
+      Cart is empty 🛒
+    </div>
+
   </div>
+</div>
+
+</div>
 
 </div>
 
