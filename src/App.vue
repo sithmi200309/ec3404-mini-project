@@ -252,10 +252,14 @@ onMounted(fetchProducts)
     </div>
 
     <!-- PRODUCTS -->
-    <div
-      v-else
-      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-    >
+    <!-- PRODUCTS -->
+<div v-else>
+
+  <!-- IF PRODUCTS EXIST -->
+  <div
+    v-if="filteredProducts.length > 0"
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+  >
     <ProductCard
   v-for="product in filteredProducts"
   :key="product.id"
@@ -265,7 +269,17 @@ onMounted(fetchProducts)
   @add-to-cart="cart.push($event)"
   @toggle-wishlist="toggleWishlist"
 />
-    </div>
+  </div>
+
+  <!-- IF NO PRODUCTS -->
+  <div
+    v-else
+    class="text-center mt-10 text-gray-500 text-lg"
+  >
+    No products found!
+  </div>
+
+</div>
 
     <!-- MODAL -->
     <ProductDetailModal
