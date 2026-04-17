@@ -8,9 +8,11 @@ import { useCart } from './composables/useCart'
 
 /* CART */
 const { cart } = useCart()
+
 const removeFromCart = (index: number) => {
   cart.value.splice(index, 1)
 }
+
 const showCart = ref(false)
 
 const openCart = () => {
@@ -20,6 +22,27 @@ const openCart = () => {
 const closeCart = () => {
   showCart.value = false
 }
+
+const totalPrice = computed(() => {
+  return cart.value.reduce((total, item) => total + item.price, 0)
+})
+
+const checkout = () => {
+  alert('Order placed successfully! 🎉')
+  cart.value = []
+  showCart.value = false
+}
+/* WISHLIST BUTTON */
+const wishlist = ref<number[]>([])
+
+const toggleWishlist = (id: number) => {
+  if (wishlist.value.includes(id)) {
+    wishlist.value = wishlist.value.filter(item => item !== id)
+  } else {
+    wishlist.value.push(id)
+  }
+}
+
 /* STATES */
 const products = ref<Product[]>([])
 const loading = ref(true)
@@ -137,7 +160,7 @@ onMounted(fetchProducts)
     <h2 class="text-xl font-bold mb-4">
       Your Cart
     </h2>
-
+    
     <!-- ITEMS -->
     <div v-if="cart.length > 0">
       <div
@@ -155,6 +178,25 @@ onMounted(fetchProducts)
         </button>
       </div>
     </div>
+
+    <!-- TOTAL -->
+    <div
+  v-if="cart.length > 0"
+  class="mt-4 pt-2 border-t font-bold flex justify-between"
+>
+  <span>Total:</span>
+  <span>$ {{ totalPrice }}</span>
+</div>
+
+<!-- CHECKOUT BUTTON -->
+<button
+  v-if="cart.length > 0"
+  class="w-full mt-4 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"
+  @click="checkout"
+>
+  Checkout
+</button>
+
 
     <!-- EMPTY -->
     <div v-else class="text-gray-500 text-center">
@@ -214,12 +256,15 @@ onMounted(fetchProducts)
       v-else
       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
     >
-      <ProductCard
-        v-for="product in filteredProducts"
-        :key="product.id"
-        :product="product"
-        @select="openProduct"
-      />
+    <ProductCard
+  v-for="product in filteredProducts"
+  :key="product.id"
+  :product="product"
+  :isWishlisted="wishlist.includes(product.id)"
+  @select="openProduct"
+  @add-to-cart="cart.push($event)"
+  @toggle-wishlist="toggleWishlist"
+/>
     </div>
 
     <!-- MODAL -->
