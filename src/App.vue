@@ -125,9 +125,10 @@ onMounted(fetchProducts)
     <div class="relative mb-6">
 
       <!-- TITLE CENTER -->
-     <h1 class="text-4xl font-bold text-center bg-white px-4 py-2 rounded-lg shadow inline-block">
-  Smart Product Explorer
-</h1>
+      <h1 class="text-4xl font-bold text-center">
+        Smart Product Explorer
+      </h1>
+
       <!-- CART RIGHT -->
       <div
         @click="openCart"
