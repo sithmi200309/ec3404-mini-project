@@ -17,7 +17,7 @@ const { addToCart } = useCart()
   <div
     v-if="show && product"
     @click.self="emit('close')"
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+   class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-40"
   >
     <div class="bg-white p-6 rounded-xl w-[400px] relative">
 

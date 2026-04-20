@@ -5,7 +5,7 @@ import type { Product, ProductResponse } from './types/product'
 import ProductCard from './components/ProductCard.vue'
 import ProductDetailModal from './components/ProductDetailModal.vue'
 import { useCart } from './composables/useCart'
-
+import ImageSlider from './components/ImageSlider.vue'
 /* CART */
 const { cart } = useCart()
 
@@ -122,93 +122,24 @@ onMounted(fetchProducts)
   >
 
     <!-- HEADER -->
-    <div class="relative flex items-center mb-6">
+    <div class="relative mb-6">
 
-  <!-- CENTER TITLE -->
-  <h1 class="text-4xl font-bold mx-auto">
-    Smart Product Explorer
-  </h1>
-
-  <!-- CART RIGHT -->
-  <div class="absolute right-0">
-
-  <!-- CART COUNT -->
-  <div
-  @click="openCart"
-  class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow mb-2 cursor-pointer"
->
-  🛒 Cart: {{ cart.length }}
-</div>
-
-  <!-- CART ITEMS -->
-  <!-- CART MODAL -->
-<div
-  v-if="showCart"
-  @click.self="closeCart"
-  class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center"
->
-  <div class="bg-white p-6 rounded-xl w-[400px] relative text-black">
-
-    <!-- CLOSE -->
-    <button
-      class="absolute top-2 right-3 text-xl"
-      @click="closeCart"
-    >
-      ✖
-    </button>
-
-    <h2 class="text-xl font-bold mb-4">
-      Your Cart
-    </h2>
-    
-    <!-- ITEMS -->
-    <div v-if="cart.length > 0">
+      <!-- TITLE CENTER -->
+     <h1 class="text-4xl font-bold text-center bg-white px-4 py-2 rounded-lg shadow inline-block">
+  Smart Product Explorer
+</h1>
+      <!-- CART RIGHT -->
       <div
-        v-for="(item, index) in cart"
-        :key="index"
-        class="flex justify-between items-center mb-3"
+        @click="openCart"
+        class="absolute top-0 right-0 bg-blue-600 text-white px-4 py-2 rounded-lg shadow cursor-pointer"
       >
-        <span>{{ item.title }}</span>
-
-        <button
-          @click="removeFromCart(index)"
-          class="text-red-500 text-sm"
-        >
-          Remove
-        </button>
+        🛒 Cart: {{ cart.length }}
       </div>
+
     </div>
 
-    <!-- TOTAL -->
-    <div
-  v-if="cart.length > 0"
-  class="mt-4 pt-2 border-t font-bold flex justify-between"
->
-  <span>Total:</span>
-  <span>$ {{ totalPrice }}</span>
-</div>
-
-<!-- CHECKOUT BUTTON -->
-<button
-  v-if="cart.length > 0"
-  class="w-full mt-4 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"
-  @click="checkout"
->
-  Checkout
-</button>
-
-
-    <!-- EMPTY -->
-    <div v-else class="text-gray-500 text-center">
-      Cart is empty 🛒
-    </div>
-
-  </div>
-</div>
-
-</div>
-
-</div>
+    <!-- SLIDER (IMPORTANT: OUTSIDE HEADER) -->
+    <ImageSlider />
 
     <!-- DARK MODE -->
     <div class="flex justify-center mb-6">
@@ -252,36 +183,86 @@ onMounted(fetchProducts)
     </div>
 
     <!-- PRODUCTS -->
-    <!-- PRODUCTS -->
-<div v-else>
+    <div v-else>
+      <div
+        v-if="filteredProducts.length > 0"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+      >
+        <ProductCard
+          v-for="product in filteredProducts"
+          :key="product.id"
+          :product="product"
+          :isWishlisted="wishlist.includes(product.id)"
+          @select="openProduct"
+          @add-to-cart="cart.push($event)"
+          @toggle-wishlist="toggleWishlist"
+        />
+      </div>
 
-  <!-- IF PRODUCTS EXIST -->
-  <div
-    v-if="filteredProducts.length > 0"
-    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-  >
-    <ProductCard
-  v-for="product in filteredProducts"
-  :key="product.id"
-  :product="product"
-  :isWishlisted="wishlist.includes(product.id)"
-  @select="openProduct"
-  @add-to-cart="cart.push($event)"
-  @toggle-wishlist="toggleWishlist"
-/>
-  </div>
+      <div
+        v-else
+        class="text-center mt-10 text-gray-500 text-lg"
+      >
+        No products found!
+      </div>
+    </div>
 
-  <!-- IF NO PRODUCTS -->
-  <div
-    v-else
-    class="text-center mt-10 text-gray-500 text-lg"
-  >
-    No products found!
-  </div>
+    <!-- CART MODAL -->
+    <div
+      v-if="showCart"
+      @click.self="closeCart"
+      class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50"
+    >
+      <div class="bg-white p-6 rounded-xl w-[400px] relative text-black">
 
-</div>
+        <button
+          class="absolute top-2 right-3 text-xl"
+          @click="closeCart"
+        >
+          ✖
+        </button>
 
-    <!-- MODAL -->
+        <h2 class="text-xl font-bold mb-4">
+          Your Cart
+        </h2>
+
+        <div v-if="cart.length > 0">
+          <div
+            v-for="(item, index) in cart"
+            :key="index"
+            class="flex justify-between items-center mb-3"
+          >
+            <span>{{ item.title }}</span>
+
+            <button
+              @click="removeFromCart(index)"
+              class="text-red-500 text-sm"
+            >
+              Remove
+            </button>
+          </div>
+
+          <div class="mt-4 pt-2 border-t font-bold flex justify-between">
+            <span>Total:</span>
+            <span>$ {{ totalPrice }}</span>
+          </div>
+
+          <button
+            class="w-full mt-4 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"
+            @click="checkout"
+          >
+            Checkout
+          </button>
+        </div>
+
+        <div v-else class="text-gray-500 text-center">
+          Cart is empty 🛒
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PRODUCT MODAL -->
     <ProductDetailModal
       :product="selectedProduct"
       :show="showModal"

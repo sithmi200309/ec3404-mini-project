@@ -1,0 +1,35 @@
+The aim 01: Set up the Vue project with TypeScript and Tailwind CSS
+Actual prompt: How do I create a Vue 3 project using Vite with TypeScript and add Tailwind CSS step by step?
+
+The aim 02: Fetch product data from DummyJSON API
+Actual prompt: How to fetch product data from https://dummyjson.com/products using fetch in Vue 3 Composition API?
+
+The aim 03: Implement search functionality for products
+Actual prompt: How can I filter products based on a search input in Vue 3 using computed properties?
+
+The aim 04: Add category filtering feature
+Actual prompt: How to filter items by category when clicking buttons in Vue 3?
+
+The aim 05: Display product details in a popup modal
+Actual prompt: How to create a modal component in Vue 3 and pass selected product data to it?
+
+The aim 06: Add a shopping cart with global state
+Actual prompt: How to create a shared cart using a composable in Vue 3?
+
+The aim 07: Keep cart data after page refresh
+Actual prompt: How to store and retrieve cart data using localStorage in Vue?
+
+The aim 08: Remove items from the cart
+Actual prompt: How to remove an item from an array using index in Vue 3?
+
+The aim 09: Improve product card UI using Tailwind CSS
+Actual prompt: Can you suggest a clean Tailwind CSS design for a product card with image, title, price and hover effect?
+
+The aim 10: Add wishlist (favorite) feature
+Actual prompt: How to implement a wishlist toggle button in Vue 3 for each product?
+
+The aim 11: Handle empty search results
+Actual prompt: How to show a message like "No products found" when the filtered list is empty in Vue?
+
+The aim 12: Fix errors and understand Vue emits and props
+Actual prompt: Why am I getting errors with defineEmits and props in Vue 3 and how to fix them?
