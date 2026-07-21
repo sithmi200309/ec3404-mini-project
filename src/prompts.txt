@@ -33,3 +33,6 @@ Actual prompt: How to show a message like "No products found" when the filtered 
 
 The aim 12: Fix errors and understand Vue emits and props
 Actual prompt: Why am I getting errors with defineEmits and props in Vue 3 and how to fix them?
+
+The aim 13: Add an automatic image slider with custom downloaded images to the homepage.
+Actual prompt: How do I add an auto-changing image slider to the top of my shopping website and use downloaded images for it?
